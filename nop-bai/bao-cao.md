@@ -1,16 +1,5 @@
 # Báo Cáo Lab Day 21 - CI/CD cho AI Systems
 
-<!--
-HƯỚNG DẪN - đọc rồi XÓA TOÀN BỘ các khối chú thích này sau khi điền xong:
-
-  - Giới hạn: KHÔNG QUÁ 1 TRANG A4, tương đương khoảng 450 - 550 từ nội dung.
-  - Chỉ điền vào các chỗ ___ và các ô trong bảng. Không thêm mục mới.
-  - Viết bằng câu hoàn chỉnh, không gạch đầu dòng cụt lủn.
-  - Kiểm tra độ dài sau khi đã xóa hết chú thích:
-        wc -w nop-bai/bao-cao.md
-    và xem trước bản in bằng cách mở file trên GitHub rồi Ctrl+P / Cmd+P.
--->
-
 | | |
 |---|---|
 | Họ và tên | Trần Quí Đôn |
@@ -40,45 +29,22 @@ HƯỚNG DẪN - đọc rồi XÓA TOÀN BỘ các khối chú thích này sau k
 
 Tập dữ liệu Census Income mất cân bằng lớp khi chỉ 24.8% mẫu thuộc lớp thu nhập cao (>50K). Một mô hình vô dụng luôn đoán "thu nhập thấp" vẫn đạt accuracy 0.752 nhưng F1 bằng 0. Do đó accuracy tạo cảm giác chính xác giả tạo. F1-score đo lường sự cân bằng giữa Precision và Recall trên lớp dương. Không dùng `average="weighted"` hay `"macro"` vì chúng bị ảnh hưởng lớn bởi lớp đa số.
 
-
 ---
 
 ## 3. Khó Khăn Gặp Phải và Cách Giải Quyết
 
-<!-- Nêu 2 - 3 khó khăn thật, mỗi ô một câu ngắn. -->
-
 | Khó khăn | Nguyên nhân | Cách giải quyết |
 |---|---|---|
-| ___ | ___ | ___ |
-| ___ | ___ | ___ |
-| ___ | ___ | ___ |
+| GitHub Actions thất bại khi pull dữ liệu DVC | Runner trên CI thiếu AWS credentials và thư viện `boto3`. | Thêm GitHub Secrets cho AWS credentials và cập nhật workflow cài bổ sung `boto3`. |
+| Cập nhật DVC remote gặp lỗi kết nối S3 | Cấu hình endpoint S3 trong `.dvc/config` chưa đồng bộ với môi trường. | Điều chỉnh cấu hình DVC remote S3 và nạp biến môi trường xác thực đầy đủ. |
 
 ---
 
 ## 4. So Sánh Bước 2 và Bước 3 (bắt buộc, 2 - 3 câu)
 
-<!-- Lấy số liệu từ bảng ở mục 3.6 của tasks/buoc-3.md. -->
-
 | | f1_score | accuracy |
 |---|---|---|
-| Bước 2 (chỉ `train_batch1`) | ___ | ___ |
-| Bước 3 (thêm `train_batch2`) | ___ | ___ |
+| Bước 2 (chỉ `train_batch1`) | 0.7182 | 0.8760 |
+| Bước 3 (thêm `train_batch2`) | 0.7297 | 0.8800 |
 
-**Nhận xét:** ___
-
-<!--
-Một câu trả lời trung thực kiểu "f1 giảm 0,01 vì dữ liệu mới cùng phân phối, không mang
-thêm thông tin mới" được đánh giá cao hơn kết luận sai rằng thêm dữ liệu luôn tốt hơn.
--->
-
----
-
-## 5. Phần Bonus Đã Thực Hiện (nếu có)
-
-<!-- Xóa cả mục 5 nếu không làm bonus. Mỗi bonus tối đa 1 dòng. -->
-
-- [ ] Bonus 1 - Tracking MLflow từ xa với DagsHub: ___
-- [ ] Bonus 2 - Điều chỉnh ngưỡng quyết định: ___
-- [ ] Bonus 3 - Báo cáo precision / recall tự động: ___
-- [ ] Bonus 4 - Hoàn trả về phiên bản trước: ___
-- [ ] Bonus 5 - Cảnh báo lệch lạc dữ liệu: ___
+**Nhận xét:** Khi bổ sung thêm 22.361 mẫu dữ liệu từ `train_batch2`, F1-score tăng nhẹ từ 0.7182 lên 0.7297 và Accuracy tăng từ 0.8760 lên 0.8800. Do dữ liệu mới được trích xuất ngẫu nhiên từ cùng một phân phối với tập huấn luyện ban đầu, việc tăng gấp đôi dung lượng dữ liệu giúp mô hình học thêm được một số đặc trưng biên nhưng không tạo ra sự thay đổi đột biến. Quan trọng nhất, quy trình CI/CD đã tự động kích hoạt huấn luyện lại và kiểm tra chất lượng thành công ngay sau khi commit con trỏ DVC mà không cần thao tác thủ công.

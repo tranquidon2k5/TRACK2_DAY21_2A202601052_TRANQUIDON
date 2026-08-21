@@ -1,5 +1,7 @@
+# Train script for Census Income Classification model (Step 1-3)
 import mlflow
 import mlflow.sklearn
+
 import pandas as pd
 import yaml
 import json

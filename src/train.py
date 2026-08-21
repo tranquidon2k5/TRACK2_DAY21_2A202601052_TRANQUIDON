@@ -1,5 +1,7 @@
 # Train script for Census Income Classification model (Step 1-3)
+# CI/CD Trigger
 import mlflow
+
 import mlflow.sklearn
 
 import pandas as pd
